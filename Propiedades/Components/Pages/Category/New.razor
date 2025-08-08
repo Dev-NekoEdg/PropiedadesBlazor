@@ -1,0 +1,40 @@
+﻿@page "/testform"
+
+<EditForm Model="@formModel"
+          OnValidSubmit="HandleValidSubmit"
+          FormName="MyForm1">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <label>First name:</label>
+    <InputText @bind-Value="formModel.FirstName" />
+    <br />
+
+    <label>Last name:</label>
+    <InputText @bind-Value="formModel.LastName" />
+    <br />
+
+    <label>Age:</label>
+    <InputNumber @bind-Value="formModel.Age" />
+    <br />
+
+    <button type="submit">Submit</button>
+</EditForm>
+<p>Live preview: @formModel.FirstName @formModel.LastName (@formModel.Age)</p>
+@code {
+    private Person formModel = new();
+
+    private void HandleValidSubmit()
+    {
+        Console.WriteLine($"FirstName: {formModel.FirstName}");
+        Console.WriteLine($"LastName: {formModel.LastName}");
+        Console.WriteLine($"Age: {formModel.Age}");
+    }
+
+    public class Person
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public int Age { get; set; }
+    }
+}

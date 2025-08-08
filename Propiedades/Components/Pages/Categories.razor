@@ -1,7 +1,86 @@
 ﻿@page "/categories"
+@using Propiedades.DTOs
+@using Propiedades.Repositories
+@inject ICategoryRepository repository
 
-<h3>Categories</h3>
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-9">
+                <h3>Categories</h3>
+            </div>
+            <div class="col-3">
+                <NavLink class="btn btn-primary" href="categories/new"><i class="bi bi-plus-circle-fill"></i> New Category</NavLink>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <td>
+                        Id
+                    </td>
+                    <td>
+                        Name
+                    </td>
+                    <td>
+                        Description
+                    </td>
+                    <td>
+                        Actions
+                    </td>
+                </tr>
+            </thead>
+            <thead>
+                @if (listCategories.Any())
+                {
+                    foreach (var cat in listCategories)
+                    {
+                        <tr>
+                            <td>
+                                @cat.Id
+                            </td>
+                            <td>
+                                @cat.Name
+                            </td>
+                            <td>
+                                @cat.Description
+                            </td>
+                            <td>
+                                <button class="btn btn-success"><i class="bi bi-pencil-square"></i> Update</button>
+                                <button class="btn btn-danger"><i class="bi bi-x-square-fill"></i> Delete</button>
+
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4">
+                            No records...
+                        </td>
+                    </tr>
+                }
+            </thead>
+        </table>
+
+
+    </div>
+</div>
+
 
 @code {
+    public List<CategoryDTO> listCategories { get; set; } = new List<CategoryDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        listCategories = (await repository.GetAllAsync()).ToList();
+
+        // return base.OnInitializedAsync();
+
+    }
 
 }

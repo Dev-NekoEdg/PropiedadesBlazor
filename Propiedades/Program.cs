@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Propiedades.Components;
 using Propiedades.Components.Account;
 using Propiedades.Data;
+using Propiedades.Mapper;
+using Propiedades.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +29,17 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
+
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddMaps(AppDomain.CurrentDomain.GetAssemblies());
+});
+//builder.Services.AddAutoMapper(typeof(ConfigurationMapper).Assembly);
+
+// Custom services
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
