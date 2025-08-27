@@ -1,26 +1,23 @@
-﻿@page "/categories/new"
+﻿@page "/categories/update/{id:int}"
 @using Propiedades.DTOs
 @using Propiedades.Repositories
 @using System.ComponentModel.DataAnnotations
 @inject ICategoryRepository repository;
 @inject NavigationManager navManager;
 
-@*
- FormName="NewCategoryForm"
-*@
 
 <div class="card">
     <div class="card-header">
-        <h3>New Category</h3>
+        <h3>Update Category</h3>
     </div>
     <div class="card-body">
-        <EditForm Model="@category" FormName="NewCategoryForm" OnValidSubmit="HandleValidSubmit">
+        <EditForm Model="@category" FormName="UpdateCategoryForm" OnValidSubmit="Save">
             <DataAnnotationsValidator></DataAnnotationsValidator>
 
             <div class="mb-3">
                 <label class="form-label">Name</label>
                 <InputText @bind-Value="category.Name" class="form-control" placeholder="Ranch"></InputText>
-                <ValidationMessage For="()=> category.Name"></ValidationMessage>
+                <ValidationMessage For="() => category.Name"></ValidationMessage>
             </div>
 
             <div class="mb-3">
@@ -34,15 +31,19 @@
     </div>
 </div>
 @code {
+    [Parameter]
+    public int? Id { get; set; }
 
     private CategoryDTO category = new CategoryDTO();
 
-    private void HandleValidSubmit()
+    protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine($"Name: {category.Name}");
-        // Console.WriteLine($"Description: {formCategory.Description}");
-        Console.WriteLine($"Description: {category.Description}");
-        // Aquí puedes llamar a tu repositorio para guardar
+        if (Id != null)
+        {
+            category = await repository.GetByIdAsync(Id.Value);
+        }
+
+        // return base.OnInitializedAsync();
     }
 
 
@@ -57,7 +58,7 @@
         }
 
         // Save Category
-        var savedCategory = await repository.CreateAsync(category);
+        var savedCategory = await repository.UpdateAsync(Id.Value, category);
 
         navManager.NavigateTo("Categories");
     }

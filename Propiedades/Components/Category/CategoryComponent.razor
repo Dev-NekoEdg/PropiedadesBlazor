@@ -1,0 +1,59 @@
+﻿@page "/test"
+@using System.ComponentModel.DataAnnotations
+
+<EditForm Model="@person" FormName="formId" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+
+    <div>
+        <label for="name">Name:</label>
+        <InputText id="name" class="form-control" @bind="@person.Name" />
+        <ValidationMessage For="@(() => person.Name)" />
+    </div>
+
+    <div>
+        <label for="email">Email:</label>
+        <InputText id="email" class="form-control" @bind="@person.Email" />
+        <ValidationMessage For="@(() => person.Email)" />
+    </div>
+
+    <ValidationSummary />
+    <button type="submit" class="btn btn-success">Submit</button>
+</EditForm>
+<h3>persona 1</h3>
+<ul>
+    <li>@person.Name</li>
+    <li>@person.Email</li>
+</ul>
+<input type="text" class="form-control" @bind="@person2.Name" />
+<input type="text" class="form-control" @bind="@person2.Email" />
+
+<h3>persona 2</h3>
+<ul>
+    <li>@person2.Name</li>
+    <li>@person2.Email</li>
+</ul>
+@code {
+    private string formId = Guid.NewGuid().ToString();
+    private Person person { get; set; } = new();
+    private Person person2 { get; set; } = new();
+
+
+
+
+    private void HandleValidSubmit()
+    {
+        // Logic to handle valid form submission (e.g., save data)
+        Console.WriteLine($"Name: {person.Name}, Email: {person.Email}");
+    }
+
+    public class Person
+    {
+        [Required]
+        [StringLength(50, ErrorMessage = "Name is too long.")]
+        public string Name { get; set; }
+
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+    }
+}

@@ -1,0 +1,95 @@
+﻿@page "/examples/blazor-javascript"
+@inject IJSRuntime jsRuntime;
+
+
+<h3>AlertsComponent</h3>
+<div class="mt-3">
+    <button class="btn btn-secondary" @onclick="(()=> BasicConfirm(ConfirmMsg))" >Basic Confirm </button>
+
+</div>
+
+<div class="mt-3">
+    <button class="btn btn-outline-success" @onclick="(() => CallingToastR(true))">Toastr Ok </button>
+    <button class="btn btn-outline-danger" @onclick="(() => CallingToastR(false))">Toastr Failed </button>
+    <button class="btn btn-outline-info" @onclick="(() => CallingToastR_Version2(true))">Toastr Info </button>
+    <button class="btn btn-outline-warning" @onclick="(() => CallingToastR_Version2(false))">Toastr Warning </button>
+
+</div>
+
+<div class="mt-3">
+    <button class="btn btn-outline-success" @onclick="(() => CallingSweepAlert(1))">SweetAlert Ok </button>
+    <button class="btn btn-outline-danger" @onclick="(() => CallingSweepAlert(2))">SweetAlert Failed </button>
+    <button class="btn btn-outline-info" @onclick="(() => CallingSweepAlert(3))">SweetAlert Info </button>
+    <button class="btn btn-outline-warning" @onclick="(() => CallingSweepAlert(4))">SweetAlert Warning </button>
+    <button class="btn btn-outline-primary" @onclick="(() => CallingSweepAlert(5))">SweetAlert Question</button>
+
+</div>
+
+@code {
+    public string ConfirmMsg { get; set; } = "are you sure about this?";
+
+    private async Task BasicConfirm(string message)
+    {
+
+        var confirmResult = await jsRuntime.InvokeAsync<bool>("confirm", message);
+
+    }
+
+    private async Task CallingToastR(bool isOk)
+    {
+        if (isOk)
+        {
+            // InvokeVoidAsync -> para que no retorne nadad
+            //await jsRuntime.InvokeVoidAsync("ShowToastR", "success", "Task Completed");
+            await jsRuntime.ToastRSuccess("Titulo", "contenido OK");
+        }
+        else
+        {
+            //await jsRuntime.InvokeVoidAsync("ShowToastR", "error", "Task Failed");
+            await jsRuntime.ToastRError("Titulo", "contenido Error");
+
+        }
+
+    }
+
+    private async Task CallingToastR_Version2(bool isOk)
+    {
+        if (isOk)
+        {
+            // InvokeVoidAsync -> para que no retorne nadad
+            //await jsRuntime.InvokeVoidAsync("ShowToastR", "success", "Task Completed");
+            await jsRuntime.ToastRInfo("Titulo Info", "contenido OK");
+        }
+        else
+        {
+            //await jsRuntime.InvokeVoidAsync("ShowToastR", "error", "Task Failed");
+            await jsRuntime.ToastRWarning("Titulo warning", "contenido warning");
+
+        }
+
+    }
+
+    private async Task CallingSweepAlert(int call)
+    {
+        switch (call)
+        {
+            case 1:
+                await jsRuntime.SweetAlertSuccess("OK", "descripotion OK");
+                break;
+            case 2:
+                await jsRuntime.SweetAlertError("ERROR", "descripotion Error");
+                break;
+            case 3:
+                await jsRuntime.SweetAlertInfo("INFO", "description Info");
+                break;
+            case 4:
+                await jsRuntime.SweetAlertWarning("WARNING", "description Warning");
+                break;
+            case 5:
+                await jsRuntime.SweetAlertQuestion("QUESTION", "description Question");
+                break;
+        }       
+    
+    }
+
+}

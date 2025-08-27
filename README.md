@@ -1,8 +1,20 @@
 # Proyecto Propiedades
 
-* blazor 
+* Blazor 
 * .Net 9
 * SqLite
+* ToastR
+
+
+----
+### Complementos 
+
+
+| Complemento | Descripción e Implementación |
+|:--|:---:|
+| [ToastR](https://codeseven.github.io/toastr/) | Se agrega el CDN del JS y del CSS en el `App.razor` y un archivo js para configurar las llamadas a las funciones del `ToastR` |
+| [JQuery](https://jquery.com/) | para usar el `ToastR` debemos usar el JQuery, así que hacemos la referencia al [CDN de JQuery](https://releases.jquery.com/) |
+| [SweetAlert2](https://sweetalert2.github.io/) | Se agraga el CDN del JS en el  `App.razor` y en el mismo archivo js `commonConfig.js`, donde se implemento el `ToastR`, se agrega las llamadas para el SweetAlert  |
 
 
 ----

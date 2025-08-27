@@ -1,40 +1,55 @@
-﻿@page "/testform"
+﻿@page "/categories/new"
+@using Propiedades.DTOs
+@using Propiedades.Repositories
+@using System.ComponentModel.DataAnnotations
+@inject ICategoryRepository repository;
+@inject NavigationManager navManager;
 
-<EditForm Model="@formModel"
-          OnValidSubmit="HandleValidSubmit"
-          FormName="MyForm1">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+@*
+ FormName="NewCategoryForm"
+*@
 
-    <label>First name:</label>
-    <InputText @bind-Value="formModel.FirstName" />
-    <br />
+<div class="card">
+    <div class="card-header">
+        <h3>New Category</h3>
+    </div>
+    <div class="card-body">
+        <EditForm Model="@category" FormName="NewCategoryForm" OnValidSubmit="Save">
+            <DataAnnotationsValidator></DataAnnotationsValidator>
 
-    <label>Last name:</label>
-    <InputText @bind-Value="formModel.LastName" />
-    <br />
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <InputText @bind-Value="category.Name" class="form-control" placeholder="Ranch"></InputText>
+                <ValidationMessage For="()=> category.Name"></ValidationMessage>
+            </div>
 
-    <label>Age:</label>
-    <InputNumber @bind-Value="formModel.Age" />
-    <br />
-
-    <button type="submit">Submit</button>
-</EditForm>
-<p>Live preview: @formModel.FirstName @formModel.LastName (@formModel.Age)</p>
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                <InputTextArea @bind-Value="category.Description" rows="2" class="form-control" placeholder=""></InputTextArea>
+            </div>
+            <ValidationSummary></ValidationSummary>
+            <NavLink class="btn btn-secondary" href="categories"><i class="bi bi-box-arrow-left"></i> Back to Categories</NavLink>
+            <button type="submit" class="btn btn-success"><i class="bi bi-check2-square"></i> Save</button>
+        </EditForm>
+    </div>
+</div>
 @code {
-    private Person formModel = new();
 
-    private void HandleValidSubmit()
-    {
-        Console.WriteLine($"FirstName: {formModel.FirstName}");
-        Console.WriteLine($"LastName: {formModel.LastName}");
-        Console.WriteLine($"Age: {formModel.Age}");
-    }
+    private CategoryDTO category = new CategoryDTO();
 
-    public class Person
+    private async Task Save()
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public int Age { get; set; }
+        var x = category;
+        var validation = await repository.GetByNameAsync(category.Name);
+
+        if (validation != null)
+        {
+            return;
+        }
+
+        // Save Category
+        var savedCategory = await repository.CreateAsync(category);
+
+        navManager.NavigateTo("Categories");
     }
 }
