@@ -1,0 +1,37 @@
+﻿@using Propiedades.DTOs
+
+<InputSelect @bind-Value="innerId" >
+    @foreach(CustomDropdownListItem item in listItems ){
+        <option value="@item.Id"> 
+            @item.Value
+        </option>
+    }
+</InputSelect> 
+
+
+@code {
+
+    private string innerId { get; set; }
+
+    [Parameter]
+    public IEnumerable<CustomDropdownListItem> listItems { get; set; }
+
+    [Parameter]
+    public string SelectedId { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnDropdownListChange { get; set; }
+
+    private void AddCounter()
+    {
+        SelectedId = innerId;
+        // Notify the parent component about the change
+        OnDropdownListChange.InvokeAsync(SelectedId);
+
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+}

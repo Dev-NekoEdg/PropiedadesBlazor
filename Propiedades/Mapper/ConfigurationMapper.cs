@@ -9,6 +9,7 @@ namespace Propiedades.Mapper
         public ConfigurationMapper()
         {
             CreateMap<Category, CategoryDTO>().ReverseMap();
+            CreateMap<Estate, EstateDTO>().ReverseMap();
         }
     }
 }

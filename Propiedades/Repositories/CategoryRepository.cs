@@ -55,7 +55,7 @@ namespace Propiedades.Repositories
 
         public async Task<CategoryDTO> GetByNameAsync(string name)
         {
-            var foundCategory = await context.Category.FirstOrDefaultAsync(c => c.Name.ToLower().Equals(name.ToUpper()));
+            var foundCategory = await context.Category.FirstOrDefaultAsync(c => c.Name.ToUpper().Equals(name.ToUpper()));
             return mapper.Map<CategoryDTO>(foundCategory);
         }
 

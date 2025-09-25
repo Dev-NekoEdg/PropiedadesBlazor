@@ -4,6 +4,7 @@
 @using System.ComponentModel.DataAnnotations
 @inject ICategoryRepository repository;
 @inject NavigationManager navManager;
+@inject IJSRuntime jsRuntime;
 
 @*
  FormName="NewCategoryForm"
@@ -44,11 +45,13 @@
 
         if (validation != null)
         {
+            await jsRuntime.ToastRError("Category", "This categorie is already created.");
             return;
         }
 
         // Save Category
         var savedCategory = await repository.CreateAsync(category);
+        await jsRuntime.ToastRSuccess("Category", "Categorie created successfully.");
 
         navManager.NavigateTo("Categories");
     }

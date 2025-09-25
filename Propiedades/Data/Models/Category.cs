@@ -15,5 +15,8 @@ namespace Propiedades.Data.Models
 
         public DateTime CreateAt { get; set; } = DateTime.Now;
         public DateTime UpdateAt { get; set; } = DateTime.Now;
+
+        public virtual ICollection<Estate> Estate { get; set; }
+
     }
 }

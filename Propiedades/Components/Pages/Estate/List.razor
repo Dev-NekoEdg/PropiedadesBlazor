@@ -1,0 +1,107 @@
+﻿@page "/estates"
+@using Propiedades.DTOs
+@using Propiedades.Repositories
+@inject IEstateRepository repository;
+@inject IJSRuntime jsRuntime;
+
+<h3>List</h3>
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-9">
+                <h3>Estates</h3>
+            </div>
+            <div class="col-3">
+                <NavLink class="btn btn-primary" href="estates/new"><i class="bi bi-plus-circle-fill"></i> New Estate</NavLink>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <td>Id</td>
+                    <td>Name</td>
+                    <td>Description</td>
+                    <td>Area</td>
+                    <td># rooms</td>
+                    <td># Bathrooms</td>
+                    <td># Parkinglots</td>
+                    <td>Price</td>
+                    <td>Active</td>
+                    <td>Categoria</td>
+                    <td>Actions</td>
+                </tr>
+            </thead>
+            <tbody>
+                @if (listEstates.Count > (int)default)
+                {
+                    @foreach (var estate in listEstates)
+                    {
+                        <tr>
+                            <td>@estate.Id</td>
+                            <td>@estate.Name</td>
+                            <td>@estate.Description</td>
+                            <td>@estate.Area</td>
+                            <td>@estate.Rooms</td>
+                            <td>@estate.Bathrooms</td>
+                            <td>@estate.Parkinglots</td>
+                            <td>@estate.Price</td>
+                            <td>@estate.IsActive</td>
+                            <td>Category</td>
+                            <td>
+                                <NavLink class="btn btn-success" href="@($"categories/update/{@estate.Id}")"><i class="bi bi-pencil-square"></i> Update</NavLink>
+                                <button class="btn btn-danger" @onclick="(() => DeleteEstate(estate.Id))"><i class="bi bi-x-square-fill"></i> Delete</button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="11">
+                            No records...
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+
+    </div>
+</div>
+@code {
+    public List<EstateDTO> listEstates { get; set; } = new List<EstateDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        listEstates = (await repository.GetAllAsync()).ToList();
+
+        // return base.OnInitializedAsync();
+
+    }
+
+    private async Task DeleteEstate(int id)
+    {
+        // confirm
+        try
+        {
+            var result = await repository.DeleteAsync(id);
+            if (result)
+            {
+                await jsRuntime.ToastRSuccess("Category", "Category deleted.");
+                // reload...
+            }
+
+        }
+        catch (Exception ex)
+        {
+            // log ex
+            await jsRuntime.ToastRError("Category", "Verify this category is not been used.");
+        }
+
+    }
+
+
+}

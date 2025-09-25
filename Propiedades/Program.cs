@@ -38,6 +38,7 @@ builder.Services.AddAutoMapper(cfg =>
 
 // Custom services
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IEstateRepository, EstateRepository>();
 
 
 

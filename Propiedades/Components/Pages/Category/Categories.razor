@@ -2,6 +2,7 @@
 @using Propiedades.DTOs
 @using Propiedades.Repositories
 @inject ICategoryRepository repository
+@inject IJSRuntime jsRuntime;
 
 <div class="card">
     <div class="card-header">
@@ -50,7 +51,7 @@
                             </td>
                             <td>
                                 <NavLink class="btn btn-success" href="@($"categories/update/{@cat.Id}")"><i class="bi bi-pencil-square"></i> Update</NavLink>
-                                <button class="btn btn-danger"><i class="bi bi-x-square-fill"></i> Delete</button>
+                                <button class="btn btn-danger" @onclick="(() => DeleteCategory(cat.Id))"><i class="bi bi-x-square-fill"></i> Delete</button>
 
                             </td>
                         </tr>
@@ -81,6 +82,26 @@
 
         // return base.OnInitializedAsync();
 
+    }
+
+    private async Task DeleteCategory(int id)
+    {
+        // confirm
+        try
+        {
+            var result = await repository.DeleteAsync(id);
+            if (result)
+            {
+                await jsRuntime.ToastRSuccess("Category", "Category deleted.");
+                // reload...
+            }
+
+        }
+        catch (Exception ex)
+        {
+            // log ex
+            await jsRuntime.ToastRError("Category", "Verify this category is not been used.");
+        }
     }
 
 }
