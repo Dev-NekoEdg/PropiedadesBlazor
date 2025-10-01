@@ -1,4 +1,4 @@
-﻿@page "/estates/new"
+﻿@page "/estates/update/{id:int}"
 @using Propiedades.DTOs
 @using Propiedades.Repositories
 @using System.ComponentModel.DataAnnotations
@@ -9,7 +9,7 @@
 
 <div class="card">
     <div class="card-header">
-        <h3>New Category</h3>
+        <h3>Update Estate</h3>
     </div>
     <div class="card-body">
         <EditForm Model="@estate" FormName="NewEstateForm" OnValidSubmit="Save">
@@ -39,7 +39,7 @@
 
             <div class="mb-3">
                 <label class="form-label">Area</label>
-                <InputNumber @bind-Value="estate.Area" class="form-control" placehoolder="mt2" ></InputNumber>
+                <InputNumber @bind-Value="estate.Area" class="form-control" placehoolder="mt2"></InputNumber>
             </div>
 
             <div class="mb-3">
@@ -74,11 +74,15 @@
     </div>
 </div>
 @code {
+    [Parameter]
+    public int? id { get; set; }
+
     private List<CategoryDTO> categories = new List<CategoryDTO>();
     private EstateDTO estate = new EstateDTO();
 
     protected override async Task OnInitializedAsync()
     {
+        estate = await repository.GetByIdAsync(id.Value);
         categories = (await categoryRepository.GetAllAsync()).ToList();
 
         //return base.OnInitializedAsync();
@@ -87,17 +91,17 @@
 
     private async Task Save()
     {
-        var validation = await repository.GetByNameAsync(estate.Name);
+        // var validation = await repository.GetByNameAsync(estate.Name);
 
-        if (validation != null)
-        {
-            await jsRuntime.ToastRError("Estate", "This categorie is already created.");
-            return;
-        }
+        // if (validation != null)
+        // {
+        //     await jsRuntime.ToastRError("Estate", "This Estate is already created.");
+        //     return;
+        // }
 
         // Save Category
-        var savedEstate = await repository.CreateAsync(estate);
-        await jsRuntime.ToastRSuccess("Estate", "Categorie created successfully.");
+        var savedEstate = await repository.UpdateAsync(id.Value, estate);
+        await jsRuntime.ToastRSuccess("Estate", "Estate updated successfully.");
 
         navManager.NavigateTo("estates");
     }

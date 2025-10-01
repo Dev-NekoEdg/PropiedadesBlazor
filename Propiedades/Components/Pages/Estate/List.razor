@@ -51,7 +51,7 @@
                             <td>@estate.IsActive</td>
                             <td>Category</td>
                             <td>
-                                <NavLink class="btn btn-success" href="@($"categories/update/{@estate.Id}")"><i class="bi bi-pencil-square"></i> Update</NavLink>
+                                <NavLink class="btn btn-success" href="@($"estates/update/{@estate.Id}")"><i class="bi bi-pencil-square"></i> Update</NavLink>
                                 <button class="btn btn-danger" @onclick="(() => DeleteEstate(estate.Id))"><i class="bi bi-x-square-fill"></i> Delete</button>
                             </td>
                         </tr>
@@ -90,7 +90,7 @@
             var result = await repository.DeleteAsync(id);
             if (result)
             {
-                await jsRuntime.ToastRSuccess("Category", "Category deleted.");
+                await jsRuntime.ToastRSuccess("Estate", "Estate deleted.");
                 // reload...
             }
 
@@ -98,7 +98,7 @@
         catch (Exception ex)
         {
             // log ex
-            await jsRuntime.ToastRError("Category", "Verify this category is not been used.");
+            await jsRuntime.ToastRError("Estate", "Error: " + ex.Message);
         }
 
     }
